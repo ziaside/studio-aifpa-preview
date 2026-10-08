@@ -71,8 +71,8 @@ window.addEventListener('scroll', () => {
   scrollTicking = true;
   requestAnimationFrame(() => {
     const height = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = height > 0 ? (window.scrollY / height) * 100 : 0;
-    document.querySelector('.scroll-progress').style.width = `${progress}%`;
+    const progress = height > 0 ? Math.min(1, Math.max(0, window.scrollY / height)) : 0;
+    document.querySelector('.scroll-progress').style.transform = `scaleX(${progress})`;
     document.querySelector('.site-header').classList.toggle('is-scrolled', window.scrollY > 20);
     scrollTicking = false;
   });
