@@ -4,7 +4,7 @@ const menuLinks = [...primaryNav.querySelectorAll('a')];
 
 function closeMenu() {
   menuToggle.setAttribute('aria-expanded', 'false');
-  menuToggle.setAttribute('aria-label', '메뉴 열기');
+  menuToggle.setAttribute('aria-label', 'Open menu');
   primaryNav.classList.remove('is-open');
   document.body.classList.remove('menu-open');
 }
@@ -12,7 +12,7 @@ function closeMenu() {
 menuToggle.addEventListener('click', () => {
   const open = menuToggle.getAttribute('aria-expanded') !== 'true';
   menuToggle.setAttribute('aria-expanded', String(open));
-  menuToggle.setAttribute('aria-label', open ? '메뉴 닫기' : '메뉴 열기');
+  menuToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
   primaryNav.classList.toggle('is-open', open);
   document.body.classList.toggle('menu-open', open);
 });
@@ -25,16 +25,17 @@ window.addEventListener('resize', () => {
   if (window.innerWidth > 760) closeMenu();
 });
 
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const gallery = document.querySelector('.work-gallery');
 document.querySelectorAll('.gallery-button').forEach((button) => {
   button.addEventListener('click', () => {
     const card = gallery.querySelector('.work-card');
-    const distance = card.getBoundingClientRect().width + 20;
-    gallery.scrollBy({ left: distance * Number(button.dataset.direction), behavior: 'smooth' });
+    const gap = Number.parseFloat(getComputedStyle(gallery).gap) || 0;
+    const distance = card.getBoundingClientRect().width + gap;
+    gallery.scrollBy({ left: distance * Number(button.dataset.direction), behavior: reducedMotion ? 'auto' : 'smooth' });
   });
 });
 
-const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 if ('IntersectionObserver' in window && !reducedMotion) {
   const revealObserver = new IntersectionObserver((entries, observer) => {
     entries.forEach((entry) => {
